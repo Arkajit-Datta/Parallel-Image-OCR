@@ -9,6 +9,9 @@ from multiprocessing import Process
 import threading
 import time
 import easyocr
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 reader = easyocr.Reader(['en'],gpu=False)
 list1 = []
 
@@ -16,10 +19,10 @@ def main(path):
     #this function will crop out the image into 4 parts such that we will be 
     #able to run the files in parallel
     crop(path)
-    path1 = "cropped/image_quad_0.jpg"
-    path2 = "cropped/image_quad_1.jpg"
-    path3 = "cropped/image_quad_2.jpg"    
-    path4 = "cropped/image_quad_3.jpg"
+    path1 = r"cropped/image_quad_0.jpg"
+    path2 = r"cropped/image_quad_1.jpg"
+    path3 = r"cropped/image_quad_2.jpg"    
+    path4 = r"cropped/image_quad_3.jpg"
 
     p1 = threading.Thread(target=ocr_recognition,args=("Thread-1",path1))
     p2 = threading.Thread(target=ocr_recognition,args=("Thread-2",path2))
@@ -67,6 +70,8 @@ def ocr_recognition(thread_name,path):
     print("The recognised part --> "+final_string)
     list1.append(final_string)
     time.sleep(1)
+
+
 
 def Cloning(li1):
     li_copy = []
